@@ -23,7 +23,6 @@ func FixImagePath(EagleRootPath string, dryRun bool) {
 	for _, file := range files {
 		//fmt.Printf("index is %v \n", i)
 		if file.IsDir() {
-			fmt.Println(file.Name())
 			dirPath := path.Join(imageFolder, file.Name())
 			imageFiles, err := ioutil.ReadDir(dirPath)
 
@@ -45,9 +44,9 @@ func fixImageFiles(files *[]os.FileInfo, dirPath string, dryRun bool) {
 
 	//如果 metadata 不存在，删除文件夹
 	_, err := os.Stat(metadataPath)
-	if os.IsNotExist(err) {
-		fmt.Printf("Metadata not exist.\n")
-		fmt.Printf("Path is %s \n", dirPath)
+	if os.IsNotExist(err) || len(*files) <= 1{
+		fmt.Printf("Metadata not exist or only contains metadata.\n")
+		fmt.Printf("Removing %s \n", dirPath)
 
 		if !dryRun {
 			err := os.RemoveAll(dirPath)
